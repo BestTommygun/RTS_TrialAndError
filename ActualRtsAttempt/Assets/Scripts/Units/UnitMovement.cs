@@ -19,12 +19,12 @@ public class UnitMovement : MonoBehaviour, IMovement
             startTime = Time.time;
         }
     }
-
+    private GameObject ParentSquadObj; //the parent squad object, its position can be used to automatically get the center of the group
     //lerp related variables
     public float startTime;
     void Update()
     {
-        if(Acceleration > 0)
+        if (Acceleration > 0)
             Acceleration -= Drag * Time.deltaTime;
         if (Acceleration > MaxAcceleration) Acceleration = MaxAcceleration;
         if (Acceleration < 0) Acceleration = 0;
