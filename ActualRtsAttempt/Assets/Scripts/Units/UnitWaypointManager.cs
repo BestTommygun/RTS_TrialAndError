@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UnitWaypointManager : MonoBehaviour
 {
-    public float distance = 0.5f; //The distance between the unit and a waypoint before the unit sees the waypoint as 'completed'.
+    public float distance = 2f; //The distance between the unit and a waypoint before the unit sees the waypoint as 'completed'.
     private GameObject _waypoint;
     /// <summary>
     /// The waypoint currently used, read-only
@@ -15,7 +15,7 @@ public class UnitWaypointManager : MonoBehaviour
         set
         {
             _waypoint = value;
-            if (unitMovement != null) unitMovement.target = _waypoint;
+            if (unitMovement != null) unitMovement.target = _waypoint.transform.position;
         }
     }
     private UnitMovement unitMovement;
