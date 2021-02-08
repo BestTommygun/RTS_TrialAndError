@@ -373,6 +373,7 @@ GameObject:
   - component: {fileID: 54809949}
   - component: {fileID: 54809952}
   - component: {fileID: 54809951}
+  - component: {fileID: 54809950}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -406,6 +407,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b868003ebe971bc45b83fca1b02419e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &54809950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 54809947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2225f9e18bcf94a4ba9789b8f4cc156f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WaypointPrefab: {fileID: 7688144828588166769, guid: 3f85a4e571af9d64ba1669f2f4208327,
+    type: 3}
+  _camera: {fileID: 1319050401}
 --- !u!114 &54809951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -534,6 +550,8 @@ GameObject:
   - component: {fileID: 110954502}
   - component: {fileID: 110954503}
   - component: {fileID: 110954501}
+  - component: {fileID: 110954505}
+  - component: {fileID: 110954504}
   m_Layer: 8
   m_Name: Soldier_normal
   m_TagString: Untagged
@@ -607,6 +625,36 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &110954504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110954499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cdd8d84dbfbbb4478e1647beaee614d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dAccelaration: 0.1
+  Acceleration: 0
+  MaxAcceleration: 15
+  Drag: 0.5
+  startTime: 0
+--- !u!114 &110954505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110954499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daf5259332c97514aa5b86b5e9ed310c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: 0
 --- !u!1001 &116386024
 PrefabInstance:
   m_ObjectHideFlags: 0
