@@ -10,6 +10,6 @@ namespace Assets.Scripts.Units.Grouping
     public struct GroupFormation
     {
         public string name;
-        public List<(GameObject, SingleUnit)> idealformation;
+        public List<(GameObject, Vector3)> idealformation;
     }
 }

@@ -16,7 +16,6 @@ namespace SelectionSystem.Components
 
         [SerializeField]
         private GameObject hLSelection;
-
         [Space]
         [SerializeField]
         private SelectionEvents _selectionEvents = new SelectionEvents();
@@ -68,7 +67,6 @@ namespace SelectionSystem.Components
             
             hLSelection.SetActive(true);
         }
-
         /// <summary>
         /// Deselect this object.
         /// </summary>

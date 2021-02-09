@@ -126,8 +126,9 @@ public class WaypointHandler : MonoBehaviour
     {
         Vector3 pos = Vector3.zero;
         Ray ray = camera.ScreenPointToRay(currentCursorPosition);
+        int layerMask = LayerMask.GetMask("Ground");
 
-        if (Physics.Raycast(ray, out var hit, camera.farClipPlane, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(ray, out var hit, camera.farClipPlane, layerMask, QueryTriggerInteraction.Ignore))
         {
             pos = hit.point;
         }

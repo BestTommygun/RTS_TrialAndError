@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class UnitMovement : MonoBehaviour, IMovement
 {
@@ -20,8 +21,13 @@ public class UnitMovement : MonoBehaviour, IMovement
         }
     }
     private GameObject ParentSquadObj; //the parent squad object, its position can be used to automatically get the center of the group
+    private NavMeshAgent agent;
     //lerp related variables
     public float startTime;
+    void Start()
+    {
+        agent = gameObject.GetComponent<NavMeshAgent>();
+    }
     void Update()
     {
         if (Acceleration > 0)
@@ -30,9 +36,10 @@ public class UnitMovement : MonoBehaviour, IMovement
         if (Acceleration < 0) Acceleration = 0;
         if (target != null)
         {
-            LookAt(target);
+            LookAt(new Vector3(target.x, transform.position.y, target.z));
             Acceleration += dAccelaration * Time.deltaTime;
-            MoveToward(target);
+            if (agent != null) agent.destination = target;
+            else MoveToward(target);
         }
     }
     public void LookAt(Vector3 pos)

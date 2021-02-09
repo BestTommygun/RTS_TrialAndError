@@ -35,7 +35,10 @@ public class UnitWaypointManager : MonoBehaviour
     {
         if(_waypoint != null) //check distance to waypoint, delete if too waypoint is completed.
         {
-            if (Vector3.Distance(transform.position, _waypoint.transform.position) <= distance)
+            //factor out height
+            Vector3 unitPos = new Vector3(transform.position.x, 0, transform.position.z);
+            Vector3 waypointPos = new Vector3(_waypoint.transform.position.x, 0, _waypoint.transform.position.z);
+            if (Vector3.Distance(unitPos, waypointPos) <= distance)
             {
                 UnitWaypoint prevWayPoint = _waypoint.GetComponent<UnitWaypoint>();
                 var nextpoint = prevWayPoint.GetNext();
