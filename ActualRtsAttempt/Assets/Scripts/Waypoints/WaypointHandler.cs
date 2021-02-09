@@ -4,6 +4,7 @@ using SelectionSystem.DesignedCollection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class WaypointHandler : MonoBehaviour
@@ -48,35 +49,50 @@ public class WaypointHandler : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             Vector3 pos = GetWaypointPos();
-            if (!pos.Equals(Vector3.zero)) GenerateWayPoint(pos);
+            string typeofSelection = "Unit";
+            if (selectionHandler.currentSelection.OfType<GroupSelector>().Count() > 0)
+                typeofSelection = "Group";
+            if (!pos.Equals(Vector3.zero)) GenerateWayPoint(pos, typeofSelection);
         }
     }
 
-    public void GenerateWayPoint(Vector3 pos)
+    public void GenerateWayPoint(Vector3 pos, string typeofWaypoint) //TODO enum
     {
         if (pos.Equals(Vector3.zero) || selectionHandler.currentSelection == null || selectionHandler.currentSelection.Count <= 0) return;
 
+        switch (typeofWaypoint) //TODO: use templating for just one function, no reason to duplicate code
+        {
+            case "Unit":
+                GenerateUnitWaypoint(pos);
+                break;
+            case "Group":
+                GenerateGroupWaypoint(pos);
+                break;
+            default:
+                break;
+        }
+
+    }
+    private void GenerateUnitWaypoint(Vector3 pos)
+    {
         GameObject newWaypoint;
         if (WaypointPrefab != null)
         {
             newWaypoint = GameObject.Instantiate<GameObject>(WaypointPrefab);
-            if(newWaypoint.GetComponent<StandardWaypoint>() == null)
-            {
-                Debug.LogError("The waypoint prefab MUST be provided a script component of StandardWaypoint type or subtype");
-                return;
-            }
+            newWaypoint.AddComponent<UnitWaypoint>();
         }
         else
         {
-            newWaypoint = GameObject.Instantiate<GameObject>(new GameObject("Basic Waypoint"));
+            newWaypoint = GameObject.Instantiate<GameObject>(new GameObject("Unit Waypoint"));
             newWaypoint.AddComponent<UnitWaypoint>();
         }
         newWaypoint.transform.position = pos;
         StandardWaypoint newWaypointScript = newWaypoint.GetComponent<UnitWaypoint>();
+
         //check if we should chain waypoints
         if (prevWayPointGenerated != null)
         {
-            if(prevWayPointGenerated.Item1.Equals(selectionHandler.currentSelection))
+            if (prevWayPointGenerated.Item1.Equals(selectionHandler.currentSelection))
             {
                 if (shiftPressed)
                 {
@@ -88,7 +104,7 @@ public class WaypointHandler : MonoBehaviour
                     }
                     else prevWayPointGenerated = null;
                 }
-                else if(prevWayPointGenerated.Item2 != null)
+                else if (prevWayPointGenerated.Item2 != null)
                 {
                     var waypointScript = prevWayPointGenerated.Item2.GetComponent<StandardWaypoint>();
                     if (waypointScript) waypointScript.Destroy();
@@ -103,7 +119,7 @@ public class WaypointHandler : MonoBehaviour
         UnitWaypoint unitWaypoint = newWaypoint.GetComponent<UnitWaypoint>();
         foreach (var selectedUnit in selectionHandler.currentSelection)
         {
-            if(selectedUnit.GetType().Equals(typeof(Selector)))
+            if (selectedUnit.GetType().Equals(typeof(Selector)))
             {
                 Selector selector = selectedUnit as Selector;
 
@@ -120,7 +136,70 @@ public class WaypointHandler : MonoBehaviour
             }
         }
         prevWayPointGenerated = new Tuple<SelectionList<ISelectable>, GameObject>(selectionHandler.currentSelection, newWaypoint); //TODO: check that this isnt passing by reference
+    }
+    private void GenerateGroupWaypoint(Vector3 pos)
+    {
+        GameObject newWaypoint;
 
+        if (WaypointPrefab != null)
+        {
+            newWaypoint = GameObject.Instantiate<GameObject>(WaypointPrefab);
+            newWaypoint.AddComponent<GroupWaypoint>();
+        }
+        else
+        {
+            newWaypoint = GameObject.Instantiate<GameObject>(new GameObject("Group Waypoint"));
+            newWaypoint.AddComponent<GroupWaypoint>();
+        }
+        newWaypoint.transform.position = pos;
+        GroupWaypoint newWaypointScript = newWaypoint.GetComponent<GroupWaypoint>();
+
+        var selectedGroups = selectionHandler.currentSelection.OfType<GroupSelector>().ToList();
+
+        //check if we should chain waypoints
+        if (prevWayPointGenerated != null)
+        {
+            if (prevWayPointGenerated.Item1.Equals(selectionHandler.currentSelection))
+            {
+                if (shiftPressed)
+                {
+                    if (prevWayPointGenerated.Item2 != null)
+                    {
+                        var waypointscript = prevWayPointGenerated.Item2.GetComponent<StandardWaypoint>();
+                        waypointscript.SetNext(newWaypointScript);
+                        newWaypointScript.SetPrev(waypointscript);
+                    }
+                    else prevWayPointGenerated = null;
+                }
+                else if (prevWayPointGenerated.Item2 != null)
+                {
+                    var waypointScript = prevWayPointGenerated.Item2.GetComponent<StandardWaypoint>();
+                    if (waypointScript) waypointScript.Destroy();
+                    else Destroy(waypointScript.gameObject);
+                }
+                else
+                {
+                    prevWayPointGenerated = null;
+                }
+            }
+        }
+        for (int i = 0; i < selectedGroups.Count; i++)
+        {
+            GroupSelector selector = selectedGroups[i];
+
+            if (!shiftPressed || prevWayPointGenerated == null)
+            {
+                GroupWaypointManager waypointManager;
+                waypointManager = selector.gameObject.GetComponent<GroupWaypointManager>();
+                if (waypointManager == null)
+                    waypointManager = selector.gameObject.AddComponent<GroupWaypointManager>();
+                waypointManager.SetWaypoint(newWaypoint);
+            }
+
+            newWaypointScript.GroupsWithWaypoint.Add(selector.gameObject.GetComponent<Group>());
+        }
+
+        prevWayPointGenerated = new Tuple<SelectionList<ISelectable>, GameObject>(selectionHandler.currentSelection, newWaypoint); //TODO: check that this isnt passing by reference
     }
     private Vector3 GetWaypointPos()
     {

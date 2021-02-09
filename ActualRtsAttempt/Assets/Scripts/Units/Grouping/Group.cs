@@ -8,8 +8,11 @@ public class Group : MonoBehaviour
     public float morale;
     public float tiredness;
     public string CurrentFormation;
+
+    private FormationHelper formationHelper;
     void Start()
     {
+        formationHelper = transform.GetComponent<FormationHelper>();
         GroupUnits = new List<SingleUnit>();
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -39,5 +42,19 @@ public class Group : MonoBehaviour
             }
             yield return new WaitForSeconds(.1f);
         }        
+    }
+    /// <summary>
+    /// sets a target for the group, accounting for formation offset
+    /// </summary>
+    /// <param name="newTarget"></param>
+    public void SetTarget(Vector3 newTarget)
+    {
+        //set first unit as proper target;
+        GroupUnits[0].UnitAgent.destination = newTarget;
+        for (int i = 0; i < GroupUnits.Count; i++)
+        {
+            GroupUnits[i].UnitAgent.destination = newTarget;
+        }
+        formationHelper.SetFormation();
     }
 }

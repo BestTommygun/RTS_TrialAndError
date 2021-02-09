@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UnitWaypoint : StandardWaypoint
 {
-    public List<GameObject> UnitsWithWaypoint;
+    public List<GameObject> UnitsWithWaypoint = new List<GameObject>();
     void Start()
     {
         CheckIfShouldDestroy();

@@ -78,6 +78,7 @@ namespace SelectionSystem.Components
                     SelectionHandler.currentSelection.Add(transform.GetChild(i).GetComponent<ISelectable>());
                 }
             }
+            SelectionHandler.currentSelection.Add(this);
         }
         /// <summary>
         /// Deselect this object.
@@ -102,6 +103,7 @@ namespace SelectionSystem.Components
                     SelectionHandler.currentSelection.Remove(transform.GetChild(i).GetComponent<ISelectable>());
                 }
             }
+            SelectionHandler.currentSelection.Remove(this);
         }
     }
 }

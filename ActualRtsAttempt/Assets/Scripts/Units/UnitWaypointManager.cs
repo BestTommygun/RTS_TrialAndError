@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.Waypoints;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class UnitWaypointManager : MonoBehaviour
+public class UnitWaypointManager : MonoBehaviour, IWaypointManager
 {
     public float distance = 2f; //The distance between the unit and a waypoint before the unit sees the waypoint as 'completed'.
     private GameObject _waypoint;
@@ -15,10 +17,10 @@ public class UnitWaypointManager : MonoBehaviour
         set
         {
             _waypoint = value;
-            if (unitMovement != null) unitMovement.target = _waypoint.transform.position;
+            if (agent != null) agent.destination = _waypoint.transform.position;
         }
     }
-    private UnitMovement unitMovement;
+    private NavMeshAgent agent;
     /// <summary>
     /// Set a new waypoint, can be accessed by anyone
     /// </summary>
@@ -29,11 +31,11 @@ public class UnitWaypointManager : MonoBehaviour
     }
     void Start()
     {
-        unitMovement = gameObject.GetComponent<UnitMovement>();
+        agent = gameObject.GetComponent<NavMeshAgent>();
     }
     private void Update()
     {
-        if(_waypoint != null) //check distance to waypoint, delete if too waypoint is completed.
+        if(_waypoint != null) //check distance to waypoint, delete if waypoint is completed.
         {
             //factor out height
             Vector3 unitPos = new Vector3(transform.position.x, 0, transform.position.z);
