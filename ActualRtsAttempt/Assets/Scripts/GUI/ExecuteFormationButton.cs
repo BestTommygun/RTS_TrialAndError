@@ -9,6 +9,7 @@ public class ExecuteFormationButton : MonoBehaviour
     public List<Group> selectedGroups;
     public List<GroupSelector> groupSelectors;
     public SelectionHandler selectionHandler;
+    private bool IsLooseFormation = true;
     void Start()
     {
         selectedGroups = new List<Group>();
@@ -32,7 +33,12 @@ public class ExecuteFormationButton : MonoBehaviour
     {
         for (int i = 0; i < selectedGroups.Count; i++)
         {
-            selectedGroups[i].CurrentFormation = formation;
+            selectedGroups[i].SetTarget(selectedGroups[i].currentTarget);
+            if (IsLooseFormation)
+            {
+                selectedGroups[i].CurrentFormation = formation;
+            }
         }
+        IsLooseFormation = !IsLooseFormation;
     }
 }

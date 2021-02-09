@@ -12,6 +12,7 @@ public class FormationHelper : MonoBehaviour
     public GameObject SquadFormationAnchor;
     private GroupWaypointManager waypointManager;
     public float Standard_offset = 2f; //TODO: const
+    private string prevFormation;
     void Start()
     {
         if (group == null) group = transform.GetComponent<Group>();
@@ -23,7 +24,9 @@ public class FormationHelper : MonoBehaviour
     }
 
     public void SetFormation(string formation = "Column")
-    { 
+    {
+        prevFormation = formation;
+
         var positions = GetImperfectPos(formation, 0.05f);
         for (int i = 0; i < group.GroupUnits.Count; i++)
         {

@@ -11,7 +11,7 @@ public class GroupWaypointManager : MonoBehaviour, IWaypointManager
     /// <summary>
     /// The waypoint currently used, read-only
     /// </summary>
-    public GameObject waypoint
+    public GameObject waypoint //TODO: reach waypoint code
     {
         get { return _waypoint; }
         set

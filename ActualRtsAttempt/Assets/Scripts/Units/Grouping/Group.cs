@@ -9,7 +9,14 @@ public class Group : MonoBehaviour
     public float tiredness;
     private GroupMovement groupMovement;
     public string defaultFormation = "Column";
-    public Vector3 currentTarget;
+    private Vector3 _currentTarget;
+    public Vector3 currentTarget
+    {
+        get
+        {
+            return _currentTarget;
+        }
+    }
     private string _currentFormation;
     public string CurrentFormation 
     {
@@ -90,7 +97,7 @@ public class Group : MonoBehaviour
             GroupUnits[i].UnitAgent.destination = newTarget;
         }
         formationHelper.SetFormation();
-        currentTarget = newTarget;
+        _currentTarget = newTarget;
 
         // set normalized axis, usefull for formation classes
         GroupForward = (newTarget - transform.position).normalized;

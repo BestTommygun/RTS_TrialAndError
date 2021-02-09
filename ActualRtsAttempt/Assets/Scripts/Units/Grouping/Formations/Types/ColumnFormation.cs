@@ -57,7 +57,6 @@ namespace Assets.Scripts.Units.Grouping.Formations
             int ranksdeep = 3; //TODO: make dynamic pls
             int unitsPerRank = actualChildCount / ranksdeep;
             int curRank = 0;
-            int xoffset = unitsPerRank / 2;
 
             Group group = ParentTransform.GetComponent<Group>();
             group.GroupForward = FormationAnchor.transform.forward;
@@ -67,7 +66,6 @@ namespace Assets.Scripts.Units.Grouping.Formations
                 var child = ParentTransform.GetChild(i);
                 if (child.gameObject.layer != 5)
                 {
-                    var mod = i % unitsPerRank;
                     if (i != 0 && i % (unitsPerRank) == 0) curRank++; //TODO: unitsPerRank + 1
                     int rankIndex = i % unitsPerRank;
 
