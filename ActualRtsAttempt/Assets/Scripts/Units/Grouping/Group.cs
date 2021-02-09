@@ -22,6 +22,14 @@ public class Group : MonoBehaviour
                 GroupUnits.Add(new SingleUnit(curChild.gameObject, curChild.transform.position));
             }
         }
+        float variation = 0.05f; //0.05 = 5%
+        //now randomize some stats for variation
+        for (int i = 0; i < GroupUnits.Count; i++)
+        {
+            var curUnit = GroupUnits[i];
+            curUnit.UnitAgent.speed += Random.Range(-variation / 2.0f, variation / 2.0f);
+            curUnit.UnitAgent.acceleration += Random.Range(-variation / 2.0f, variation / 2.0f);
+        }
     }
     private void Update()
     {
