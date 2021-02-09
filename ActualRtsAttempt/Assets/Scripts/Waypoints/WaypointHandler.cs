@@ -13,6 +13,8 @@ public class WaypointHandler : MonoBehaviour
     public GameObject WaypointPrefab;
     private Tuple<SelectionList<ISelectable>, GameObject> prevWayPointGenerated;
 
+    private Vector3 mousedownPoint;
+
     private SelectionHandler selectionHandler;
     private bool shiftPressed = false;
     private Vector3 currentCursorPosition = Vector3.zero;
@@ -46,34 +48,41 @@ public class WaypointHandler : MonoBehaviour
     {
         currentCursorPosition = Input.mousePosition; //TODO: Use inputHelper for this
         shiftPressed = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1)) mousedownPoint = GetWaypointPos();
+        if (Input.GetMouseButtonUp(1))
         {
             Vector3 pos = GetWaypointPos();
+            Vector3 forward = Vector3.zero;
+            if (Vector3.Distance(pos, mousedownPoint) > 0)
+            {
+                forward = (pos - mousedownPoint).normalized;
+                pos = mousedownPoint;
+            }
             string typeofSelection = "Unit";
             if (selectionHandler.currentSelection.OfType<GroupSelector>().Count() > 0)
                 typeofSelection = "Group";
-            if (!pos.Equals(Vector3.zero)) GenerateWayPoint(pos, typeofSelection);
+            if (!pos.Equals(Vector3.zero)) GenerateWayPoint(pos, typeofSelection, forward);
         }
     }
 
-    public void GenerateWayPoint(Vector3 pos, string typeofWaypoint) //TODO enum
+    public void GenerateWayPoint(Vector3 pos, string typeofWaypoint, Vector3 forward) //TODO enum
     {
         if (pos.Equals(Vector3.zero) || selectionHandler.currentSelection == null || selectionHandler.currentSelection.Count <= 0) return;
 
         switch (typeofWaypoint) //TODO: use templating for just one function, no reason to duplicate code
         {
             case "Unit":
-                GenerateUnitWaypoint(pos);
+                GenerateUnitWaypoint(pos, forward);
                 break;
             case "Group":
-                GenerateGroupWaypoint(pos);
+                GenerateGroupWaypoint(pos, forward);
                 break;
             default:
                 break;
         }
 
     }
-    private void GenerateUnitWaypoint(Vector3 pos)
+    private void GenerateUnitWaypoint(Vector3 pos, Vector3 forward)
     {
         GameObject newWaypoint;
         if (WaypointPrefab != null)
@@ -87,6 +96,12 @@ public class WaypointHandler : MonoBehaviour
             newWaypoint.AddComponent<UnitWaypoint>();
         }
         newWaypoint.transform.position = pos;
+        if(forward != Vector3.zero)
+        {
+            var rotation = Quaternion.LookRotation(forward.normalized);
+            newWaypoint.transform.rotation = Quaternion.RotateTowards(newWaypoint.transform.rotation, rotation, 720);
+        }
+
         StandardWaypoint newWaypointScript = newWaypoint.GetComponent<UnitWaypoint>();
 
         //check if we should chain waypoints
@@ -137,7 +152,7 @@ public class WaypointHandler : MonoBehaviour
         }
         prevWayPointGenerated = new Tuple<SelectionList<ISelectable>, GameObject>(selectionHandler.currentSelection, newWaypoint); //TODO: check that this isnt passing by reference
     }
-    private void GenerateGroupWaypoint(Vector3 pos)
+    private void GenerateGroupWaypoint(Vector3 pos, Vector3 forward)
     {
         GameObject newWaypoint;
 
@@ -152,6 +167,11 @@ public class WaypointHandler : MonoBehaviour
             newWaypoint.AddComponent<GroupWaypoint>();
         }
         newWaypoint.transform.position = pos;
+        if (forward != Vector3.zero)
+        {
+            var rotation = Quaternion.LookRotation(forward.normalized);
+            newWaypoint.transform.rotation = Quaternion.RotateTowards(newWaypoint.transform.rotation, rotation, 720);
+        }
         GroupWaypoint newWaypointScript = newWaypoint.GetComponent<GroupWaypoint>();
 
         var selectedGroups = selectionHandler.currentSelection.OfType<GroupSelector>().ToList();

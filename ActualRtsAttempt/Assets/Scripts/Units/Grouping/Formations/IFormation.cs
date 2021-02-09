@@ -19,7 +19,8 @@ namespace Assets.Scripts.Units.Grouping.Formations
         /// Applies formation logic to get what positions your units should be in, Formation coordinates take worldspace and rotation into account.
         /// </summary>
         /// <param name="ParentTransform">the parent squad object</param>
+        /// <param name="FormationAnchor">The transform used to orient the formation</param>
         /// <returns>the used formation in worldspace</returns>
-        List<(GameObject, Transform)> ApplyFormationLogicRelativeToParent(Transform ParentTransform);
+        List<(GameObject, Vector3)> ApplyFormationLogicRelativeToParent(Transform ParentTransform, Transform FormationAnchor);
     }
 }

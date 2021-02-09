@@ -15,7 +15,7 @@ namespace Assets.Scripts.Units.Grouping.Formations
             throw new NotImplementedException();
         }
 
-        public List<(GameObject, Transform)> ApplyFormationLogicRelativeToParent(Transform ParentTransform)
+        public List<(GameObject, Vector3)> ApplyFormationLogicRelativeToParent(Transform ParentTransform, Transform FormationAnchor)
         {
             throw new NotImplementedException();
         }

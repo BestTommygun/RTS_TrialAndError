@@ -120,7 +120,7 @@ namespace SelectionSystem.Components
             yield return shortDelay;
             _meshCollider.enabled = false; 
         }
-        private void DeselectAll()
+        private void DeselectAll() //TODO: SELECT GROUPS NOT UNITS, the current selection is kinda breaking everything
         {
             currentSelection.Clear();
         }

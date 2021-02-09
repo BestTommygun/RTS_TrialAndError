@@ -9,19 +9,22 @@ public class FormationHelper : MonoBehaviour
 {
     public Group group;
     public FormationFactory formationFactory;
+    public GameObject SquadFormationAnchor;
+    private GroupWaypointManager waypointManager;
     public float Standard_offset = 2f; //TODO: const
     void Start()
     {
         if (group == null) group = transform.GetComponent<Group>();
+        if (waypointManager == null) waypointManager = transform.GetComponent<GroupWaypointManager>();
         formationFactory = new FormationFactory();
         //TODO: use factory
         if(group.GroupUnits != null)
             SetFormation();
     }
 
-    public void SetFormation()
+    public void SetFormation(string formation = "Column")
     { 
-        var positions = GetImperfectPos("Column", 0.05f);
+        var positions = GetImperfectPos(formation, 0.05f);
         for (int i = 0; i < group.GroupUnits.Count; i++)
         {
             var curUnit = group.GroupUnits[i];
@@ -33,7 +36,13 @@ public class FormationHelper : MonoBehaviour
     private List<(GameObject, Vector3)> GetImperfectPos(string formationName, float errorMargin = 0.1f)
     {
         IFormation formation = formationFactory.returnFormation(formationName);
-        var perfFormation = formation.ApplyFormationLogic(transform);
+
+        Transform anchorTransform;
+        if (waypointManager.waypoint != null) anchorTransform = waypointManager.waypoint.transform;
+        else anchorTransform = group.GroupUnits[0].UnitObject.transform;
+
+        var perfFormation = formation.ApplyFormationLogicRelativeToParent(transform, anchorTransform);
+
         List<(GameObject, Vector3)> imperfectFormation = new List<(GameObject, Vector3)>();
         for (int i = 0; i < perfFormation.Count; i++)
         {

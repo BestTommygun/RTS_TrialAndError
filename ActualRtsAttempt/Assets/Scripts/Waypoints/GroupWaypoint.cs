@@ -5,6 +5,20 @@ using UnityEngine;
 public class GroupWaypoint : StandardWaypoint
 {
     public List<Group> GroupsWithWaypoint = new List<Group>();
+    private Vector3 _waypointForward;
+    public Vector3 WayPointForward
+    {
+        get
+        {
+            return _waypointForward;
+        }
+        set
+        {
+            _waypointForward = value;
+            Left = new Vector3(_waypointForward.z, _waypointForward.y, -_waypointForward.x) * -1;
+        }
+    }
+    public Vector3 Left;
     void Start()
     {
         CheckIfShouldDestroy();

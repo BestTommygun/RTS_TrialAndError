@@ -58,7 +58,7 @@ namespace SelectionSystem.DesignedCollection
         /// <summary>
         /// Removes all the items deselecting them.
         /// </summary>
-        public void Clear()
+        public void Clear() //TODO: group selections are fucking with this
         {
             foreach (var item in _items)
             {
